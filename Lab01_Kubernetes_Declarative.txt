@@ -1,11 +1,19 @@
 1. Levantar minikube 
-minikube start
+minikube start ok
+
+|----------|-----------|---------|--------------|------|---------|----------|-------|----------------|--------------------|
+| Profile  | VM Driver | Runtime |      IP      | Port | Version |  Status  | Nodes | Active Profile | Active Kubecontext |
+|----------|-----------|---------|--------------|------|---------|----------|-------|----------------|--------------------|
+| minikube | docker    | docker  | 192.168.49.2 | 8443 | v1.32.0 | Starting |     1 | *              | *                  |
+|----------|-----------|---------|--------------|------|---------|----------|-------|----------------|--------------------|
+
 2. Ver informacion del kubectl, del cluster:
 kubectl version --output=yaml
 kubectl config view
 kubectl cluster-info
 Verla de forma grafica, en otra ventana terminal o tab dejar levantado el dashboard (se levantara en un browser):
 minikube dashboard
+
 3. En otra ventana o tab podemos conectarnos al server (a la virtual que contiene tanto al master como a los nodos):
 minikube ssh
 Ver qué hay adentro:
@@ -15,10 +23,152 @@ ps aux
 docker version
 docker container ls
 Ver los contenedores pausados.
+
+(venv) vanesa.manzanelli@infraPC-0484:~/CursoDevOpsTecnology/kube-labs$ kubectl version
+Client Version: v1.32.3
+Kustomize Version: v5.5.0
+Server Version: v1.32.0
+
+vanesa.manzanelli@infraPC-0484:~/.kube$ cat config
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority: /home/vanesa.manzanelli/.minikube/ca.crt
+    extensions:
+    - extension:
+        last-update: Fri, 28 Mar 2025 17:20:12 -03
+        provider: minikube.sigs.k8s.io
+        version: v1.35.0
+      name: cluster_info
+    server: https://192.168.49.2:8443
+  name: minikube
+contexts:
+- context:
+    cluster: minikube
+    extensions:
+    - extension:
+        last-update: Fri, 28 Mar 2025 17:20:12 -03
+        provider: minikube.sigs.k8s.io
+        version: v1.35.0
+      name: context_info
+    namespace: default
+    user: minikube
+  name: minikube
+current-context: minikube
+kind: Config
+preferences: {}
+users:
+- name: minikube
+  user:
+    client-certificate: /home/vanesa.manzanelli/.minikube/profiles/minikube/client.crt
+    client-key: /home/vanesa.manzanelli/.minikube/profiles/minikube/client.key
+vanesa.manzanelli@infraPC-0484:~/.kube$ 
+
+
+
 4. En la ventana original ver los nodos (uno solo en el caso de minikube)
 kubectl get nodes
+NAME       STATUS   ROLES           AGE     VERSION
+minikube   Ready    control-plane   5m53s   v1.32.0
+
 5. Ver en detalle el nodo:
 kubectl describe node minikube
+Name:               minikube
+Roles:              control-plane
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/os=linux
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=minikube
+                    kubernetes.io/os=linux
+                    minikube.k8s.io/commit=dd5d320e41b5451cdf3c01891bc4e13d189586ed-dirty
+                    minikube.k8s.io/name=minikube
+                    minikube.k8s.io/primary=true
+                    minikube.k8s.io/updated_at=2025_03_28T17_20_12_0700
+                    minikube.k8s.io/version=v1.35.0
+                    node-role.kubernetes.io/control-plane=
+                    node.kubernetes.io/exclude-from-external-load-balancers=
+Annotations:        kubeadm.alpha.kubernetes.io/cri-socket: unix:///var/run/cri-dockerd.sock
+                    node.alpha.kubernetes.io/ttl: 0
+                    volumes.kubernetes.io/controller-managed-attach-detach: true
+CreationTimestamp:  Fri, 28 Mar 2025 17:20:08 -0300
+Taints:             <none>
+Unschedulable:      false
+Lease:
+  HolderIdentity:  minikube
+  AcquireTime:     <unset>
+  RenewTime:       Fri, 28 Mar 2025 17:26:19 -0300
+Conditions:
+  Type             Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message
+  ----             ------  -----------------                 ------------------                ------                       -------
+  MemoryPressure   False   Fri, 28 Mar 2025 17:23:25 -0300   Fri, 28 Mar 2025 17:20:06 -0300   KubeletHasSufficientMemory   kubelet has sufficient memory available
+  DiskPressure     False   Fri, 28 Mar 2025 17:23:25 -0300   Fri, 28 Mar 2025 17:20:06 -0300   KubeletHasNoDiskPressure     kubelet has no disk pressure
+  PIDPressure      False   Fri, 28 Mar 2025 17:23:25 -0300   Fri, 28 Mar 2025 17:20:06 -0300   KubeletHasSufficientPID      kubelet has sufficient PID available
+  Ready            True    Fri, 28 Mar 2025 17:23:25 -0300   Fri, 28 Mar 2025 17:20:08 -0300   KubeletReady                 kubelet is posting ready status
+Addresses:
+  InternalIP:  192.168.49.2
+  Hostname:    minikube
+Capacity:
+  cpu:                8
+  ephemeral-storage:  227662276Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             16215004Ki
+  pods:               110
+Allocatable:
+  cpu:                8
+  ephemeral-storage:  227662276Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             16215004Ki
+  pods:               110
+System Info:
+  Machine ID:                 4df2401ed4bb45dba4ca20e7ae042fd0
+  System UUID:                364a28c8-771b-4a1e-9cd2-9ae0002fb457
+  Boot ID:                    73399744-6932-4639-bfbe-a8d31184a9c5
+  Kernel Version:             6.8.0-56-generic
+  OS Image:                   Ubuntu 22.04.5 LTS
+  Operating System:           linux
+  Architecture:               amd64
+  Container Runtime Version:  docker://27.4.1
+  Kubelet Version:            v1.32.0
+  Kube-Proxy Version:         v1.32.0
+PodCIDR:                      10.244.0.0/24
+PodCIDRs:                     10.244.0.0/24
+Non-terminated Pods:          (8 in total)
+  Namespace                   Name                                CPU Requests  CPU Limits  Memory Requests  Memory Limits  Age
+  ---------                   ----                                ------------  ----------  ---------------  -------------  ---
+  kube-system                 coredns-668d6bf9bc-hb2tn            100m (1%)     0 (0%)      70Mi (0%)        170Mi (1%)     6m9s
+  kube-system                 coredns-668d6bf9bc-jxb5z            100m (1%)     0 (0%)      70Mi (0%)        170Mi (1%)     6m9s
+  kube-system                 etcd-minikube                       100m (1%)     0 (0%)      100Mi (0%)       0 (0%)         6m17s
+  kube-system                 kube-apiserver-minikube             250m (3%)     0 (0%)      0 (0%)           0 (0%)         6m15s
+  kube-system                 kube-controller-manager-minikube    200m (2%)     0 (0%)      0 (0%)           0 (0%)         6m15s
+  kube-system                 kube-proxy-b26c2                    0 (0%)        0 (0%)      0 (0%)           0 (0%)         6m10s
+  kube-system                 kube-scheduler-minikube             100m (1%)     0 (0%)      0 (0%)           0 (0%)         6m17s
+  kube-system                 storage-provisioner                 0 (0%)        0 (0%)      0 (0%)           0 (0%)         6m13s
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests    Limits
+  --------           --------    ------
+  cpu                850m (10%)  0 (0%)
+  memory             240Mi (1%)  340Mi (2%)
+  ephemeral-storage  0 (0%)      0 (0%)
+  hugepages-1Gi      0 (0%)      0 (0%)
+  hugepages-2Mi      0 (0%)      0 (0%)
+Events:
+  Type    Reason                   Age                    From             Message
+  ----    ------                   ----                   ----             -------
+  Normal  Starting                 6m8s                   kube-proxy       
+  Normal  NodeHasSufficientMemory  6m22s (x8 over 6m22s)  kubelet          Node minikube status is now: NodeHasSufficientMemory
+  Normal  NodeHasNoDiskPressure    6m22s (x8 over 6m22s)  kubelet          Node minikube status is now: NodeHasNoDiskPressure
+  Normal  NodeHasSufficientPID     6m22s (x7 over 6m22s)  kubelet          Node minikube status is now: NodeHasSufficientPID
+  Normal  NodeAllocatableEnforced  6m22s                  kubelet          Updated Node Allocatable limit across pods
+  Normal  Starting                 6m15s                  kubelet          Starting kubelet.
+  Normal  NodeAllocatableEnforced  6m15s                  kubelet          Updated Node Allocatable limit across pods
+  Normal  NodeHasSufficientMemory  6m15s                  kubelet          Node minikube status is now: NodeHasSufficientMemory
+  Normal  NodeHasNoDiskPressure    6m15s                  kubelet          Node minikube status is now: NodeHasNoDiskPressure
+  Normal  NodeHasSufficientPID     6m15s                  kubelet          Node minikube status is now: NodeHasSufficientPID
+  Normal  RegisteredNode           6m11s                  node-controller  Node minikube event: Registered Node minikube in Controller
+
 6. Ver si hay algo levantado en el namespace default:
 kubectl get pods
 kubectl get replicasets
@@ -28,7 +178,29 @@ kubectl get deployments
 kubectl apply -f deploy.yml
 8. Ver los pods que se crearon:
 kubectl get pods
+
+(venv) vanesa.manzanelli@infraPC-0484:~/CursoDevOpsTecnology/kube-labs$ kubectl apply -f deploy.yml
+deployment.apps/hello-deploy created
+(venv) vanesa.manzanelli@infraPC-0484:~/CursoDevOpsTecnology/kube-labs$ kubectl get deployments
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+hello-deploy   5/5     5            5           78s
+(venv) vanesa.manzanelli@infraPC-0484:~/CursoDevOpsTecnology/kube-labs$ kubectl get pods
+NAME                           READY   STATUS    RESTARTS   AGE
+hello-deploy-94499c4b9-7nhqq   1/1     Running   0          92s
+hello-deploy-94499c4b9-czpwr   1/1     Running   0          92s
+hello-deploy-94499c4b9-drpc4   1/1     Running   0          92s
+hello-deploy-94499c4b9-k8cnc   1/1     Running   0          92s
+hello-deploy-94499c4b9-sspzs   1/1     Running   0          92s
+
 kubectl get pods -o wide
+
+NAME                           READY   STATUS    RESTARTS   AGE     IP            NODE       NOMINATED NODE   READINESS GATES
+hello-deploy-94499c4b9-7nhqq   1/1     Running   0          2m15s   10.244.0.9    minikube   <none>           <none>
+hello-deploy-94499c4b9-czpwr   1/1     Running   0          2m15s   10.244.0.10   minikube   <none>           <none>
+hello-deploy-94499c4b9-drpc4   1/1     Running   0          2m15s   10.244.0.6    minikube   <none>           <none>
+hello-deploy-94499c4b9-k8cnc   1/1     Running   0          2m15s   10.244.0.7    minikube   <none>           <none>
+hello-deploy-94499c4b9-sspzs   1/1     Running   0          2m15s   10.244.0.8    minikube   <none>           <none>
+
 9. Ver los replicasets:
 kubectl get rs
 kubectl get rs -o json
@@ -36,10 +208,66 @@ kubectl get rs -o json
 kubectl get deployments
 kubectl get deployments -o json
 kubectl describe deploy hello-deploy
+
+http://127.0.0.1:34427/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/#/pod?namespace=default
+
+(venv) vanesa.manzanelli@infraPC-0484:~/CursoDevOpsTecnology/kube-labs$ kubectl describe deploy hello-deploy
+Name:                   hello-deploy
+Namespace:              default
+CreationTimestamp:      Fri, 28 Mar 2025 17:44:01 -0300
+Labels:                 <none>
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               app=hello-world
+Replicas:               5 desired | 5 updated | 5 total | 5 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        10
+RollingUpdateStrategy:  1 max unavailable, 1 max surge
+Pod Template:
+  Labels:  app=hello-world
+  Containers:
+   hello-pod:
+    Image:         diegochavezcarro/hellonodedocker:v1
+    Port:          8080/TCP
+    Host Port:     0/TCP
+    Environment:   <none>
+    Mounts:        <none>
+  Volumes:         <none>
+  Node-Selectors:  <none>
+  Tolerations:     <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   hello-deploy-94499c4b9 (5/5 replicas created)
+Events:
+  Type    Reason             Age    From                   Message
+  ----    ------             ----   ----                   -------
+  Normal  ScalingReplicaSet  5m35s  deployment-controller  Scaled up replica set hello-deploy-94499c4b9 from 0 to 5
+(venv) vanesa.manzanelli@infraPC-0484:~/CursoDevOpsTecnology/kube-labs$ 
+
 11.Ver más detalles del pod creado
 Usando el nombre del pod generado:
 kubectl get pods -o json hello-deploy-ccdbcf554-nfbvr
 kubectl describe pods hello-deploy-ccdbcf554-nfbvr
+
+NAME                           READY   STATUS    RESTARTS   AGE    IP            NODE       NOMINATED NODE   READINESS GATES
+hello-deploy-94499c4b9-7nhqq   1/1     Running   0          3m5s   10.244.0.9    minikube   <none>           <none>
+hello-deploy-94499c4b9-czpwr   1/1     Running   0          3m5s   10.244.0.10   minikube   <none>           <none>
+hello-deploy-94499c4b9-drpc4   1/1     Running   0          3m5s   10.244.0.6    minikube   <none>           <none>
+hello-deploy-94499c4b9-k8cnc   1/1     Running   0          3m5s   10.244.0.7    minikube   <none>           <none>
+hello-deploy-94499c4b9-sspzs   1/1     Running   0          3m5s   10.244.0.8    minikube   <none>           <none>
+
+mato uno 
+
+NAME                           READY   STATUS    RESTARTS   AGE     IP            NODE       NOMINATED NODE   READINESS GATES
+hello-deploy-94499c4b9-czpwr   1/1     Running   0          3m33s   10.244.0.10   minikube   <none>           <none>
+hello-deploy-94499c4b9-drpc4   1/1     Running   0          3m33s   10.244.0.6    minikube   <none>           <none>
+hello-deploy-94499c4b9-k8cnc   1/1     Running   0          3m33s   10.244.0.7    minikube   <none>           <none>
+hello-deploy-94499c4b9-sspzs   1/1     Running   0          3m33s   10.244.0.8    minikube   <none>           <none>
+hello-deploy-94499c4b9-xtkmm   1/1     Running   0          6s      10.244.0.11   minikube   <none>           <none>
+
 12. En la terminal conectada al Minikube SSH ver los contenedores que se crearon:
 docker container ls
 13. En la terminal original ver dentro del pod: 
@@ -87,6 +315,74 @@ minikube stop
 Si se quiere borrar el trabajo hecho:
 minikube delete
 
+kubectl get deployments hello-deploy -o yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"hello-deploy","namespace":"default"},"spec":{"minReadySeconds":10,"replicas":5,"selector":{"matchLabels":{"app":"hello-world"}},"strategy":{"rollingUpdate":{"maxSurge":1,"maxUnavailable":1},"type":"RollingUpdate"},"template":{"metadata":{"labels":{"app":"hello-world"}},"spec":{"containers":[{"image":"diegochavezcarro/hellonodedocker:v1","name":"hello-pod","ports":[{"containerPort":8080}]}]}}}}
+  creationTimestamp: "2025-03-28T20:44:01Z"
+  generation: 1
+  name: hello-deploy
+  namespace: default
+  resourceVersion: "1890"
+  uid: 3934cab9-5912-4e4e-9c72-1335b6fa036e
+spec:
+  minReadySeconds: 10
+  progressDeadlineSeconds: 600
+  replicas: 5
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: hello-world
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: hello-world
+    spec:
+      containers:
+      - image: diegochavezcarro/hellonodedocker:v1
+        imagePullPolicy: IfNotPresent
+        name: hello-pod
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 5
+  conditions:
+  - lastTransitionTime: "2025-03-28T20:44:52Z"
+    lastUpdateTime: "2025-03-28T20:44:52Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2025-03-28T20:44:01Z"
+    lastUpdateTime: "2025-03-28T20:44:52Z"
+    message: ReplicaSet "hello-deploy-94499c4b9" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 1
+  readyReplicas: 5
+  replicas: 5
+  updatedReplicas: 5
 
 
 

@@ -1,6 +1,7 @@
 1. Instalacion:
 Como primer paso instalar Docker. Ver instrucciones en el paso 1 de:
 https://github.com/diegochavezcarro/docker-labs/blob/main/Instrucciones.txt
+
 Segundo, instalar Minikube, el cluster local de Kubernetes, tiene algunas ventajas utilizarlo 
 desde un Linux o un Linux dentro de una Virtual, ayuda con el acceso a los Services de Kubernetes.
 https://minikube.sigs.k8s.io/docs/start/
@@ -30,10 +31,22 @@ https://minikube.sigs.k8s.io/docs/start/
 https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/#install-with-homebrew-on-macos
 En ambos usar la opcion Homebrew.
 
-
+minikube version: v1.35.0
 
 Una vez instalado en todos los casos ver si se instalo bien el cliente:
 kubectl version --client --output=yaml
+
+clientVersion:
+  buildDate: "2025-03-11T19:58:53Z"
+  compiler: gc
+  gitCommit: 32cc146f75aad04beaaa245a7157eb35063a9f99
+  gitTreeState: clean
+  gitVersion: v1.32.3
+  goVersion: go1.23.6
+  major: "1"
+  minor: "32"
+  platform: linux/amd64
+kustomizeVersion: v5.5.0
 
 Levantar el minikube:
 minikube start
@@ -41,14 +54,180 @@ Por defecto si se tiene el Docker levantado Linux, Windows, Windows WSL2 usaran 
 como virtualizacion para levantar el cluster local. macOS usara un virtualizador a nivel 
 software, liviano, llamado Hyperkit.
 Una vez levantado el cluster, ejecutar:
-minikube status
+
+minikube status :
+
+minikube
+type: Control Plane
+host: Running
+kubelet: Running
+apiserver: Running
+kubeconfig: Configured
+
 Tambien, para mas detalles:
 minikube profile list
+
+|----------|-----------|---------|--------------|------|---------|--------|-------|----------------|--------------------|
+| Profile  | VM Driver | Runtime |      IP      | Port | Version | Status | Nodes | Active Profile | Active Kubecontext |
+|----------|-----------|---------|--------------|------|---------|--------|-------|----------------|--------------------|
+| minikube | docker    | docker  | 192.168.49.2 | 8443 | v1.32.0 | OK     |     1 | *              | *                  |
+|----------|-----------|---------|--------------|------|---------|--------|-------|----------------|--------------------|
 
 Ahora kubectl deberia estar correctamente configurado para acceder tanto al client como al server:
 kubectl version --output=yaml
 
-2. Realizar Lab01, Lab02.
+clientVersion:
+  buildDate: "2025-03-11T19:58:53Z"
+  compiler: gc
+  gitCommit: 32cc146f75aad04beaaa245a7157eb35063a9f99
+  gitTreeState: clean
+  gitVersion: v1.32.3
+  goVersion: go1.23.6
+  major: "1"
+  minor: "32"
+  platform: linux/amd64
+kustomizeVersion: v5.5.0
+serverVersion:
+  buildDate: "2024-12-11T17:59:15Z"
+  compiler: gc
+  gitCommit: 70d3cc986aa8221cd1dfb1121852688902d3bf53
+  gitTreeState: clean
+  gitVersion: v1.32.0
+  goVersion: go1.23.3
+  major: "1"
+  minor: "32"
+  platform: linux/amd64
+
+  (venv) vanesa.manzanelli@infraPC-0484:~/CursoDevOpsTecnology$ minikube ssh
+docker@minikube:~$ ls
+docker@minikube:~$ 
+estoy adentro del cluster de kubernetes
+
+con docker container ls:
+CONTAINER ID   IMAGE                          COMMAND                  CREATED          STATUS          PORTS     NAMES
+4be32a60914c   kubernetesui/metrics-scraper   "/metrics-sidecar"       4 minutes ago    Up 4 minutes              k8s_dashboard-metrics-scraper_dashboard-metrics-scraper-5d59dccf9b-jg49j_kubernetes-dashboard_3dfc7183-e3af-4bf7-aa44-14704eeaa8e1_0
+fe25adf6a693   kubernetesui/dashboard         "/dashboard --insecu…"   4 minutes ago    Up 4 minutes              k8s_kubernetes-dashboard_kubernetes-dashboard-7779f9b69b-g8fjg_kubernetes-dashboard_54957b47-6960-4118-9384-902aa683707f_0
+8ff5261143ba   registry.k8s.io/pause:3.10     "/pause"                 4 minutes ago    Up 4 minutes              k8s_POD_dashboard-metrics-scraper-5d59dccf9b-jg49j_kubernetes-dashboard_3dfc7183-e3af-4bf7-aa44-14704eeaa8e1_0
+3dac18963c2b   registry.k8s.io/pause:3.10     "/pause"                 4 minutes ago    Up 4 minutes              k8s_POD_kubernetes-dashboard-7779f9b69b-g8fjg_kubernetes-dashboard_54957b47-6960-4118-9384-902aa683707f_0
+53f3e1d110c5   6e38f40d628d                   "/storage-provisioner"   17 minutes ago   Up 17 minutes             k8s_storage-provisioner_storage-provisioner_kube-system_9b21067d-706b-4ec6-ad1f-fb56d5f90985_1
+5b9944e11856   c69fa2e9cbf5                   "/coredns -conf /etc…"   17 minutes ago   Up 17 minutes             k8s_coredns_coredns-668d6bf9bc-hb2tn_kube-system_6840b2cb-8402-4b56-a98f-ab3e594408fe_0
+92fb1da37df3   c69fa2e9cbf5                   "/coredns -conf /etc…"   17 minutes ago   Up 17 minutes             k8s_coredns_coredns-668d6bf9bc-jxb5z_kube-system_91d22e82-a297-4722-97b1-79d041149018_0
+767de9ecaf7e   registry.k8s.io/pause:3.10     "/pause"                 17 minutes ago   Up 17 minutes             k8s_POD_coredns-668d6bf9bc-hb2tn_kube-system_6840b2cb-8402-4b56-a98f-ab3e594408fe_0
+691850908d57   registry.k8s.io/pause:3.10     "/pause"                 17 minutes ago   Up 17 minutes             k8s_POD_coredns-668d6bf9bc-jxb5z_kube-system_91d22e82-a297-4722-97b1-79d041149018_0
+1e9eac59a071   040f9f8aac8c                   "/usr/local/bin/kube…"   17 minutes ago   Up 17 minutes             k8s_kube-proxy_kube-proxy-b26c2_kube-system_23f389f3-fed8-479b-92d1-8f9aa5e7fa1b_0
+46e537fecc40   registry.k8s.io/pause:3.10     "/pause"                 17 minutes ago   Up 17 minutes             k8s_POD_kube-proxy-b26c2_kube-system_23f389f3-fed8-479b-92d1-8f9aa5e7fa1b_0
+48465a772378   registry.k8s.io/pause:3.10     "/pause"                 17 minutes ago   Up 17 minutes             k8s_POD_storage-provisioner_kube-system_9b21067d-706b-4ec6-ad1f-fb56d5f90985_0
+5a56ce0983f7   8cab3d2a8bd0                   "kube-controller-man…"   18 minutes ago   Up 18 minutes             k8s_kube-controller-manager_kube-controller-manager-minikube_kube-system_843c74f7b3bc7d7040a05c31708a6a30_0
+708e704c7aef   c2e17b8d0f4a                   "kube-apiserver --ad…"   18 minutes ago   Up 18 minutes             k8s_kube-apiserver_kube-apiserver-minikube_kube-system_d72d0a4cf4be077c9919d46b7358a5e8_0
+af3af5ad5cdb   a389e107f4ff                   "kube-scheduler --au…"   18 minutes ago   Up 18 minutes             k8s_kube-scheduler_kube-scheduler-minikube_kube-system_d14ce008bee3a1f3bd7cf547688f9dfe_0
+4eb52d21cd5f   a9e7e6b294ba                   "etcd --advertise-cl…"   18 minutes ago   Up 18 minutes             k8s_etcd_etcd-minikube_kube-system_2b4b75c2a289008e0b381891e9683040_0
+220c2636556b   registry.k8s.io/pause:3.10     "/pause"                 18 minutes ago   Up 18 minutes             k8s_POD_kube-scheduler-minikube_kube-system_d14ce008bee3a1f3bd7cf547688f9dfe_0
+73168c9c21c3   registry.k8s.io/pause:3.10     "/pause"                 18 minutes ago   Up 18 minutes             k8s_POD_kube-apiserver-minikube_kube-system_d72d0a4cf4be077c9919d46b7358a5e8_0
+9488b311ea2a   registry.k8s.io/pause:3.10     "/pause"                 18 minutes ago   Up 18 minutes             k8s_POD_kube-controller-manager-minikube_kube-system_843c74f7b3bc7d7040a05c31708a6a30_0
+5a1f0e86b226   registry.k8s.io/pause:3.10     "/pause"                 18 minutes ago   Up 18 minutes             k8s_POD_etcd-minikube_kube-system_2b4b75c2a289008e0b381891e9683040_0
+
+(venv) vanesa.manzanelli@infraPC-0484:~/CursoDevOpsTecnology$ kubectl describe nodes minikube
+Name:               minikube
+Roles:              control-plane
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/os=linux
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=minikube
+                    kubernetes.io/os=linux
+                    minikube.k8s.io/commit=dd5d320e41b5451cdf3c01891bc4e13d189586ed-dirty
+                    minikube.k8s.io/name=minikube
+                    minikube.k8s.io/primary=true
+                    minikube.k8s.io/updated_at=2025_03_28T17_20_12_0700
+                    minikube.k8s.io/version=v1.35.0
+                    node-role.kubernetes.io/control-plane=
+                    node.kubernetes.io/exclude-from-external-load-balancers=
+Annotations:        kubeadm.alpha.kubernetes.io/cri-socket: unix:///var/run/cri-dockerd.sock
+                    node.alpha.kubernetes.io/ttl: 0
+                    volumes.kubernetes.io/controller-managed-attach-detach: true
+CreationTimestamp:  Fri, 28 Mar 2025 17:20:08 -0300
+Taints:             <none>
+Unschedulable:      false
+Lease:
+  HolderIdentity:  minikube
+  AcquireTime:     <unset>
+  RenewTime:       Fri, 28 Mar 2025 17:40:36 -0300
+Conditions:
+  Type             Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message
+  ----             ------  -----------------                 ------------------                ------                       -------
+  MemoryPressure   False   Fri, 28 Mar 2025 17:37:23 -0300   Fri, 28 Mar 2025 17:20:06 -0300   KubeletHasSufficientMemory   kubelet has sufficient memory available
+  DiskPressure     False   Fri, 28 Mar 2025 17:37:23 -0300   Fri, 28 Mar 2025 17:20:06 -0300   KubeletHasNoDiskPressure     kubelet has no disk pressure
+  PIDPressure      False   Fri, 28 Mar 2025 17:37:23 -0300   Fri, 28 Mar 2025 17:20:06 -0300   KubeletHasSufficientPID      kubelet has sufficient PID available
+  Ready            True    Fri, 28 Mar 2025 17:37:23 -0300   Fri, 28 Mar 2025 17:20:08 -0300   KubeletReady                 kubelet is posting ready status
+Addresses:
+  InternalIP:  192.168.49.2
+  Hostname:    minikube
+Capacity:
+  cpu:                8
+  ephemeral-storage:  227662276Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             16215004Ki
+  pods:               110
+Allocatable:
+  cpu:                8
+  ephemeral-storage:  227662276Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             16215004Ki
+  pods:               110
+System Info:
+  Machine ID:                 4df2401ed4bb45dba4ca20e7ae042fd0
+  System UUID:                364a28c8-771b-4a1e-9cd2-9ae0002fb457
+  Boot ID:                    73399744-6932-4639-bfbe-a8d31184a9c5
+  Kernel Version:             6.8.0-56-generic
+  OS Image:                   Ubuntu 22.04.5 LTS
+  Operating System:           linux
+  Architecture:               amd64
+  Container Runtime Version:  docker://27.4.1
+  Kubelet Version:            v1.32.0
+  Kube-Proxy Version:         v1.32.0
+PodCIDR:                      10.244.0.0/24
+PodCIDRs:                     10.244.0.0/24
+Non-terminated Pods:          (10 in total)
+  Namespace                   Name                                          CPU Requests  CPU Limits  Memory Requests  Memory Limits  Age
+  ---------                   ----                                          ------------  ----------  ---------------  -------------  ---
+  kube-system                 coredns-668d6bf9bc-hb2tn                      100m (1%)     0 (0%)      70Mi (0%)        170Mi (1%)     20m
+  kube-system                 coredns-668d6bf9bc-jxb5z                      100m (1%)     0 (0%)      70Mi (0%)        170Mi (1%)     20m
+  kube-system                 etcd-minikube                                 100m (1%)     0 (0%)      100Mi (0%)       0 (0%)         20m
+  kube-system                 kube-apiserver-minikube                       250m (3%)     0 (0%)      0 (0%)           0 (0%)         20m
+  kube-system                 kube-controller-manager-minikube              200m (2%)     0 (0%)      0 (0%)           0 (0%)         20m
+  kube-system                 kube-proxy-b26c2                              0 (0%)        0 (0%)      0 (0%)           0 (0%)         20m
+  kube-system                 kube-scheduler-minikube                       100m (1%)     0 (0%)      0 (0%)           0 (0%)         20m
+  kube-system                 storage-provisioner                           0 (0%)        0 (0%)      0 (0%)           0 (0%)         20m
+  kubernetes-dashboard        dashboard-metrics-scraper-5d59dccf9b-jg49j    0 (0%)        0 (0%)      0 (0%)           0 (0%)         7m12s
+  kubernetes-dashboard        kubernetes-dashboard-7779f9b69b-g8fjg         0 (0%)        0 (0%)      0 (0%)           0 (0%)         7m12s
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests    Limits
+  --------           --------    ------
+  cpu                850m (10%)  0 (0%)
+  memory             240Mi (1%)  340Mi (2%)
+  ephemeral-storage  0 (0%)      0 (0%)
+  hugepages-1Gi      0 (0%)      0 (0%)
+  hugepages-2Mi      0 (0%)      0 (0%)
+Events:
+  Type    Reason                   Age                From             Message
+  ----    ------                   ----               ----             -------
+  Normal  Starting                 20m                kube-proxy       
+  Normal  NodeHasSufficientMemory  20m (x8 over 20m)  kubelet          Node minikube status is now: NodeHasSufficientMemory
+  Normal  NodeHasNoDiskPressure    20m (x8 over 20m)  kubelet          Node minikube status is now: NodeHasNoDiskPressure
+  Normal  NodeHasSufficientPID     20m (x7 over 20m)  kubelet          Node minikube status is now: NodeHasSufficientPID
+  Normal  NodeAllocatableEnforced  20m                kubelet          Updated Node Allocatable limit across pods
+  Normal  Starting                 20m                kubelet          Starting kubelet.
+  Normal  NodeAllocatableEnforced  20m                kubelet          Updated Node Allocatable limit across pods
+  Normal  NodeHasSufficientMemory  20m                kubelet          Node minikube status is now: NodeHasSufficientMemory
+  Normal  NodeHasNoDiskPressure    20m                kubelet          Node minikube status is now: NodeHasNoDiskPressure
+  Normal  NodeHasSufficientPID     20m                kubelet          Node minikube status is now: NodeHasSufficientPID
+  Normal  RegisteredNode           20m                node-controller  Node minikube event: Registered Node minikube in Controller
+(venv) vanesa.manzanelli@infraPC-0484:~/CursoDevOpsTecnology$ 
+
+2. Realizar Lab01, Lab02. 
+
 3. Luego el de la Carpeta python-redis
 4. Continuar con Lab04, hasta Lab10.
 5. Opcionales: 
