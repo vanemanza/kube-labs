@@ -9,12 +9,77 @@ minikube start ok
 
 2. Ver informacion del kubectl, del cluster:
 kubectl version --output=yaml
+
+clientVersion:
+  buildDate: "2025-03-11T19:58:53Z"
+  compiler: gc
+  gitCommit: 32cc146f75aad04beaaa245a7157eb35063a9f99
+  gitTreeState: clean
+  gitVersion: v1.32.3
+  goVersion: go1.23.6
+  major: "1"
+  minor: "32"
+  platform: linux/amd64
+kustomizeVersion: v5.5.0
+serverVersion:
+  buildDate: "2024-12-11T17:59:15Z"
+  compiler: gc
+  gitCommit: 70d3cc986aa8221cd1dfb1121852688902d3bf53
+  gitTreeState: clean
+  gitVersion: v1.32.0
+  goVersion: go1.23.3
+  major: "1"
+  minor: "32"
+  platform: linux/amd64
+
 kubectl config view
+
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority: /home/vanesa.manzanelli/.minikube/ca.crt
+    extensions:
+    - extension:
+        last-update: Fri, 04 Apr 2025 15:27:42 -03
+        provider: minikube.sigs.k8s.io
+        version: v1.35.0
+      name: cluster_info
+    server: https://192.168.49.2:8443
+  name: minikube
+contexts:
+- context:
+    cluster: minikube
+    extensions:
+    - extension:
+        last-update: Fri, 04 Apr 2025 15:27:42 -03
+        provider: minikube.sigs.k8s.io
+        version: v1.35.0
+      name: context_info
+    namespace: default
+    user: minikube
+  name: minikube
+current-context: minikube
+kind: Config
+preferences: {}
+users:
+- name: minikube
+  user:
+    client-certificate: /home/vanesa.manzanelli/.minikube/profiles/minikube/client.crt
+    client-key: /home/vanesa.manzanelli/.minikube/profiles/minikube/client.key
+
 kubectl cluster-info
+
+Kubernetes control plane is running at https://192.168.49.2:8443
+CoreDNS is running at https://192.168.49.2:8443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+
 Verla de forma grafica, en otra ventana terminal o tab dejar levantado el dashboard (se levantara en un browser):
+
 minikube dashboard
 
 3. En otra ventana o tab podemos conectarnos al server (a la virtual que contiene tanto al master como a los nodos):
+
 minikube ssh
 Ver qué hay adentro:
 pwd
