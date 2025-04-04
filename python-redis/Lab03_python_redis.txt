@@ -10,32 +10,75 @@ nodo worker):
 minikube ssh
 4. Crear un deployment para la base redis:
 kubectl apply -f deploy-redis.yml
+
 5. Ver los pods que se crearon:
 kubectl get pods -o wide
+
 6. Levantar un servicio para exponer ese deployment,usando el archivo descriptivo:
 kubectl apply -f svc-redis.yml
 7. Ver los servicios levantados:
 kubectl get services
 Observar que solo se expone internamente al cluster.
 
+(venv) vanesa.manzanelli@infraPC-0484:~/CursoDevOpsTecnology/kube-labs/python-redis$ kubectl apply -f deploy-redis.yml
+deployment.apps/redis created
+(venv) vanesa.manzanelli@infraPC-0484:~/CursoDevOpsTecnology/kube-labs/python-redis$ kubectl apply -f svc-redis.yml
+service/redis created
+(venv) vanesa.manzanelli@infraPC-0484:~/CursoDevOpsTecnology/kube-labs/python-redis$ kubectl get services
+NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP    29m
+redis        ClusterIP   10.107.124.228   <none>        6379/TCP   10s
+
 8. Crear un deployment para la app python:
 kubectl apply -f deploy-python.yml
 9. Ver los pods que se crearon:
 kubectl get pods -o wide
+
+(venv) vanesa.manzanelli@infraPC-0484:~/CursoDevOpsTecnology/kube-labs/python-redis$ kubectl apply -f deploy-python.yml
+deployment.apps/python-deploy created
+(venv) vanesa.manzanelli@infraPC-0484:~/CursoDevOpsTecnology/kube-labs/python-redis$ kubectl get pods -o wide
+NAME                             READY   STATUS    RESTARTS   AGE     IP            NODE       NOMINATED NODE   READINESS GATES
+hello-deploy-94499c4b9-2w4zz     1/1     Running   0          7m13s   10.244.0.7    minikube   <none>           <none>
+hello-deploy-94499c4b9-brm9s     1/1     Running   0          7m13s   10.244.0.6    minikube   <none>           <none>
+hello-deploy-94499c4b9-mqtlc     1/1     Running   0          7m13s   10.244.0.10   minikube   <none>           <none>
+hello-deploy-94499c4b9-tsg8k     1/1     Running   0          7m13s   10.244.0.8    minikube   <none>           <none>
+hello-deploy-94499c4b9-xvdzw     1/1     Running   0          7m13s   10.244.0.9    minikube   <none>           <none>
+python-deploy-6fc8fb6f77-87kw4   1/1     Running   0          14s     10.244.0.12   minikube   <none>           <none>
+python-deploy-6fc8fb6f77-96ggz   1/1     Running   0          14s     10.244.0.13   minikube   <none>           <none>
+python-deploy-6fc8fb6f77-qq6ph   1/1     Running   0          14s     10.244.0.14   minikube   <none>           <none>
+redis-6f4bdb7b7c-zh265           1/1     Running   0          2m32s   10.244.0.11   minikube   <none>           <none>
+
 10. Levantar un servicio para exponer ese deployment,usando el archivo descriptivo, ya que se usa el tipo LoadBalancer, levantar un tunel en otro tab:
 minikube tunnel
+
 Luego crear el Service:
 kubectl apply -f svc-python.yml
 11. Ver los servicios levantados:
 kubectl get services
+
+(venv) vanesa.manzanelli@infraPC-0484:~/CursoDevOpsTecnology/kube-labs/python-redis$ kubectl get services
+NAME         TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+kubernetes   ClusterIP      10.96.0.1        <none>        443/TCP        34m
+python-svc   LoadBalancer   10.107.9.36      <pending>     80:32524/TCP   9s
+redis        ClusterIP      10.107.124.228   <none>        6379/TCP       5m15s
+
 12. En la PC cliente ir a un browser y poner la IP que aparece como externa en get "svc":
 http://10.108.244.34
+
+
 Si no anduvo probar:
 minikube service python-svc
 Se vera en el Browser la app, o sino ver la URL y levantarla en el browser.
 
+(venv) vanesa.manzanelli@infraPC-0484:~/CursoDevOpsTecnology/kube-labs/python-redis$ minikube service python-svc
+|-----------|------------|-------------|---------------------------|
+| NAMESPACE |    NAME    | TARGET PORT |            URL            |
+|-----------|------------|-------------|---------------------------|
+| default   | python-svc |          80 | http://192.168.49.2:32524 |
+|-----------|------------|-------------|---------------------------|
+🎉  Opening service default/python-svc in default browser...
 
-
+(venv) vanesa.manzanelli@infraPC-0484:~/CursoDevOpsTecnology/kube-labs/python-redis$ Abriendo en una sesión existente del navegador
 
 
 
