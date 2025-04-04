@@ -1,16 +1,81 @@
 1. Crear un volumen y un pod que contenga un MongoDB:
 kubectl apply -f mongodb-pod-hostpath.yaml
+
+venv) vanesa.manzanelli@infraPC-0484:~/CursoDevOpsTecnology/kube-labs$ kubectl apply -f mongodb-pod-hostpath.yaml
+pod/mongodb created
+(venv) vanesa.manzanelli@infraPC-0484:~/CursoDevOpsTecnology/kube-labs$ kubectl get pods -o wide
+NAME                             READY   STATUS    RESTARTS   AGE     IP            NODE       NOMINATED NODE   READINESS GATES
+hello-deploy-94499c4b9-2w4zz     1/1     Running   0          38m     10.244.0.7    minikube   <none>           <none>
+hello-deploy-94499c4b9-brm9s     1/1     Running   0          38m     10.244.0.6    minikube   <none>           <none>
+hello-deploy-94499c4b9-mqtlc     1/1     Running   0          38m     10.244.0.10   minikube   <none>           <none>
+hello-deploy-94499c4b9-tsg8k     1/1     Running   0          38m     10.244.0.8    minikube   <none>           <none>
+hello-deploy-94499c4b9-xvdzw     1/1     Running   0          38m     10.244.0.9    minikube   <none>           <none>
+mongodb                          1/1     Running   0          30s     10.244.0.16   minikube   <none>           <none>
+python-deploy-6fc8fb6f77-87kw4   1/1     Running   0          31m     10.244.0.12   minikube   <none>           <none>
+python-deploy-6fc8fb6f77-96ggz   1/1     Running   0          31m     10.244.0.13   minikube   <none>           <none>
+python-deploy-6fc8fb6f77-qq6ph   1/1     Running   0          31m     10.244.0.14   minikube   <none>           <none>
+redis-6f4bdb7b7c-trrsm           1/1     Running   0          6m24s   10.244.0.15   minikube   <none>           <none>
+
 2.Conectarse al pod:
 kubectl exec -it mongodb -- mongosh
 3. Crear una base e ingresar algo:
 use baseprueba
 db.coleccion.insert({name:'diego'});
+
+test> show db
+MongoshInvalidInputError: [COMMON-10001] 'db' is not a valid argument for "show".
+test> use baseprueba
+switched to db baseprueba
+baseprueba> db.coleccion.insert({name:'vane'});
+DeprecationWarning: Collection.insert() is deprecated. Use insertOne, insertMany, or bulkWrite.
+{
+  acknowledged: true,
+  insertedIds: { '0': ObjectId('67f033ace78fca45276b140b') }
+}
+baseprueba> 
+
+
 4. Ver si se ingreso bien:
 db.coleccion.find();
 5. Borrar el pod:
 kubectl delete pod mongodb
+
+MongoshInvalidInputError: [COMMON-10001] 'db' is not a valid argument for "show".
+test> use baseprueba
+switched to db baseprueba
+baseprueba> db.coleccion.insert({name:'vane'});
+DeprecationWarning: Collection.insert() is deprecated. Use insertOne, insertMany, or bulkWrite.
+{
+  acknowledged: true,
+  insertedIds: { '0': ObjectId('67f033ace78fca45276b140b') }
+}
+baseprueba> show collections
+coleccion
+baseprueba> show dbs
+admin       40.00 KiB
+baseprueba  40.00 KiB
+config      12.00 KiB
+local       40.00 KiB
+baseprueba> 
+
 6. En una consola logueada al minikube ver si se conservaron datos:
 ls /tmp/mongodb/
+
+(venv) vanesa.manzanelli@infraPC-0484:~/CursoDevOpsTecnology$ minikube ssh
+docker@minikube:~$ ls /tmp/mongodb/
+WiredTiger                           diagnostic.data
+WiredTiger.lock                      index-1-4873253292664497817.wt
+WiredTiger.turtle                    index-3-4873253292664497817.wt
+WiredTiger.wt                        index-5-4873253292664497817.wt
+WiredTigerHS.wt                      index-6-4873253292664497817.wt
+_mdb_catalog.wt                      index-8-4873253292664497817.wt
+collection-0-4873253292664497817.wt  journal
+collection-2-4873253292664497817.wt  mongod.lock
+collection-4-4873253292664497817.wt  sizeStorer.wt
+collection-7-4873253292664497817.wt  storage.bson
+docker@minikube:~$ 
+
+
 7. Volver a crear el pod:
 kubectl apply -f mongodb-pod-hostpath.yaml
 8. Comprobar si los datos estan aun:
