@@ -97,3 +97,9 @@ http://127.0.0.1:40891/v2   ✅ http://192.168.49.2:30884]
 
 Se vera el servicio llamado web2.
 
+https://docs.nginx.com/nginx-ingress-controller/overview/about/
+https://apisix.apache.org/docs/ingress-controller/design/
+https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/
+https://medium.com/@anandctx/aks-ingress-load-balancer-how-it-works-e6c5bb6530f7
+https://stacksimplify.com/azure-aks/azure-kubernetes-service-ingress-basics/
+https://kubernetes.io/blog/2025/03/24/ingress-nginx-cve-2025-1974/
