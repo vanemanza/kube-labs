@@ -1,11 +1,44 @@
 1. Ver si se ven metricas: 
 kubectl top nodes
+error: Metrics API not available
 Va a dar un error si no es asi.
+el metric server es un addon que se le agregar a kub yaml??
+
 2. Desplegar el metrics-server:
 minikube addons enable metrics-server
-3. Ver en el dashboard o la linea de comandos si se levanto un deploy en el ns kube-system
+
+💡  metrics-server is an addon maintained by Kubernetes. For any concerns contact minikube on GitHub.
+You can view the list of minikube maintainers at: https://github.com/kubernetes/minikube/blob/master/OWNERS
+    ▪ Using image registry.k8s.io/metrics-server/metrics-server:v0.7.2
+🌟  The 'metrics-server' addon is enabled
+
+kubectl get po -n kube-system
+
+edis$ kubectl get pods -n kube-system
+NAME                               READY   STATUS    RESTARTS      AGE
+coredns-668d6bf9bc-bvjr8           1/1     Running   2 (29m ago)   30m
+etcd-minikube                      1/1     Running   0             30m
+kindnet-7jrb6                      1/1     Running   0             30m
+kindnet-kvpbg                      1/1     Running   0             29m
+kube-apiserver-minikube            1/1     Running   0             30m
+kube-controller-manager-minikube   1/1     Running   0             30m
+kube-proxy-lqvtc                   1/1     Running   0             29m
+kube-proxy-r7wwj                   1/1     Running   0             30m
+kube-scheduler-minikube            1/1     Running   0             30m
+metrics-server-7fbb699795-pdnbv    1/1     Running   0             96s
+storage-provisioner                1/1     Running   1 (29m ago)   30m
+
+3. Ver en el dashboard o la linea de comandos si se levanto un deploy en el 
+ns kube-system
+
+
 4. Despues de pocos minutos deberian verse las metricas. Tambien se veran en el dashboard:
 kubectl top nodes
+
+NAME           CPU(cores)   CPU(%)   MEMORY(bytes)   MEMORY(%)   
+minikube       329m         4%       921Mi           5%          
+minikube-m03   147m         1%       500Mi           3%  
+
 
 5. Bajarse el codigo de https://github.com/dch-microdemo/product-service
 
@@ -13,21 +46,65 @@ kubectl top nodes
 kubectl create -f product-app-k8s-template.yaml
 kubectl create -f product-hpa.yaml
 
+(venv) vanesa.manzanelli@infraPC-0484:~/CursoDevOpsTecnology/product-service$ kubectl create -f product-app-k8s-template.yaml
+service/product-service created
+deployment.apps/product-deploy created
+(venv) vanesa.manzanelli@infraPC-0484:~/CursoDevOpsTecnology/product-service$ kubectl create -f product-hpa.yaml
+horizontalpodautoscaler.autoscaling/product-app created
+
+
+Autoescalamiento elastico de kubernetes !!!???
+
+kubctl get deployments hpa ????
+
+
 7. Ver si se despleg— la aplicacion (reemplazar minikube-ip con lo q muestra el comando "minikube ip"):
-http://minikube-ip:30001/products/
+http://minikube-ip:30001/products/ -> http://192.168.49.2:30001/products/
 Si no anda ejecutar
 minikube service product-service
-Devolvera un vector vacio "[]" en el browser, es un microservicio que aun no tiene datos.
+
+Whitelabel Error Page
+This application has no explicit mapping for /error, so you are seeing this as a fallback.
+
+Fri Apr 11 20:30:04 GMT 2025
+There was an unexpected error (type=Not Found, status=404).
+No message available
+
+Devolvera un vector vacio "[]" en el browser, es un microservicio que 
+aun no tiene datos.  ok ok ok
 
 8. Observar al HPA y al Deployment. A los pocos minutos de no realizar consumos se bajara de 2 pods a 1.
 kubectl get hpa
+
+NAME          REFERENCE                   TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+product-app   Deployment/product-deploy   cpu: 0%/50%   1         4         1          6m20s
+
 kubectl get deploy
+kubectl get deploy
+NAME             READY   UP-TO-DATE   AVAILABLE   AGE
+product-deploy   1/1     1            1           7m8s
+python-deploy    6/6     6            6           42m
+redis            1/1     1            1           43m
 
 9. Generar carga. Ir viendo los dos comandos anteriores en otro tab (hpa y deploy).
-
+crear un generador de carga
 kubectl run -it --rm --restart=Never loadgenerator --image=busybox -- sh -c "while true; do wget -O - -q http://product-service:8082/products/; done"
 
 A los pocos minutos se veran 3 o 4 pods.
+
+get hpa
+NAME          REFERENCE                   TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+product-app   Deployment/product-deploy   cpu: 252%/50%   1         4         4          14m
+
+
+NAME          REFERENCE                   TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+product-app   Deployment/product-deploy   cpu: 11%/50%   1         4         4          14m
+
+NAME          REFERENCE                   TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+product-app   Deployment/product-deploy   cpu: 0%/50%   1         4         4          17m 
+
+NAME          REFERENCE                   TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+product-app   Deployment/product-deploy   cpu: 0%/50%   1         4         1          19m
 
 10. Parar con ctrl+c ese generador, y a los pocos minutos se volvera a 1 pod.
 
