@@ -109,6 +109,23 @@ product-app   Deployment/product-deploy   cpu: 0%/50%   1         4         1   
 10. Parar con ctrl+c ese generador, y a los pocos minutos se volvera a 1 pod.
 
 
+Un memory leak (fuga de memoria) es cuando una aplicación no libera correctamente la memoria que ya no necesita, lo que provoca un consumo creciente de memoria con el tiempo.
+
+En palabras simples:
+Imaginá que tu programa va pidiendo memoria para guardar datos (como variables, objetos, estructuras...). Cuando esos datos ya no se usan, debería liberar esa memoria para que otros procesos la puedan usar. Pero si por algún motivo el programa se "olvida" de liberar esa memoria, esa porción queda ocupada innecesariamente. Eso es una fuga de memoria.
+
+¿Por qué es un problema?
+Con el tiempo, el programa consume cada vez más memoria.
+
+Puede provocar que el sistema se vuelva lento o que se caiga el programa con errores tipo OutOfMemory.
+
+En entornos productivos (por ejemplo, servicios en la nube), puede generar problemas de escalabilidad y rendimiento graves.
+
+¿Dónde suele pasar?
+En lenguajes como C o C++, donde la gestión de memoria es manual (con malloc/free o new/delete).
+
+En lenguajes con recolector de basura (como Java, Python, Go...), puede seguir ocurriendo si el programa mantiene referencias a objetos que ya no necesita, impidiendo que se liberen automáticamente.
+
 
 
 
